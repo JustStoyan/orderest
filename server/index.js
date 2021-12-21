@@ -9,7 +9,7 @@ require('./config/mongoose')();
 require('./config/express')(app);
 
 
-app.use(routes);
+app.use('/api', routes);
 app.use(errorHandler);
 
 app.listen(config.PORT, () => console.log(`Listening on port ${config.PORT}`))
