@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+
     },
 
     password: {
@@ -18,18 +19,13 @@ const userSchema = new mongoose.Schema({
 })
 
 
-userSchema.pre('save', async function (next,) {
+userSchema.pre('save', async function (next) {
 
     const rawPass = this.password;
-    try {
-        const strongPassword = await bcrypt.hash(rawPass, SALT_ROUNDS);
-        this.password = strongPassword;
-        next()
-    } catch (err) {
-        err = new Error('User already exists');
-        next(err)
-    }
 
+    const strongPassword = await bcrypt.hash(rawPass, SALT_ROUNDS);
+    this.password = strongPassword;
+    next();
 })
 
 
