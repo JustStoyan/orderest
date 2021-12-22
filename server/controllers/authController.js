@@ -50,6 +50,19 @@ router.post('/register', (req, res, next) => {
 router.post('/login', (req, res, next) => {
     const { username, password } = req.body;
 
+    authResource.login(username, password)
+        .then(result => {
+
+            if (result) {
+                res.status(200).json(result);
+            } else {
+                next()
+            }
+
+
+        })
+
+
 })
 
 router.delete('/remove/:userId', (req, res, next) => {
