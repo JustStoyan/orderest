@@ -1,27 +1,29 @@
-const { SECRET_KEY, COOKIE_NAME } = require('../config');
+const { SECRET_KEY } = require('../config');
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
-    let token = req.cookies[COOKIE_NAME];
+    let token = req.headers.authorisation.split(' ')[1];
 
-    if (token) {
-        jwt.verify(token, SECRET_KEY, function (err, decoded) {
-            if (err) {
-                res.clearCookie(COOKIE_NAME);
-            } else {
-                req.user = decoded;
-                res.locals.user = decoded;
-                res.locals.isAuth = true;
-            }
+
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        res.userData = decoded;
+        next();
+    }
+    catch (err) {
+        return res.status(401).json({
+            message: 'Auth failed',
+            type: 'error'
         })
     }
 
-    next()
+
+
 }
 
 const isAuth = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({ "message": "You are not authorised to perform this action" });
+    if (!res.userData) {
+        return res.status(401).json({ "message": "You are not authorised to perform this action", "type": "error" });
     }
 
     next();

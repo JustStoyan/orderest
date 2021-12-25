@@ -4,7 +4,9 @@ const { SALT_ROUNDS } = require('../config')
 
 
 const userSchema = new mongoose.Schema({
-    username: {
+
+    
+    email: {
         type: String,
         required: true,
         unique: true
